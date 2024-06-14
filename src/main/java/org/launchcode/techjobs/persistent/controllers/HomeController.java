@@ -36,7 +36,7 @@ public class HomeController {
     public String index(Model model) {
 
         model.addAttribute("title", "MyJobs");
-
+        model.addAttribute("jobs", jobRepository.findAll());
         return "index";
     }
 
@@ -44,7 +44,7 @@ public class HomeController {
     public String displayAddJobForm(Model model) {
 	    model.addAttribute("title", "Add Job");
         model.addAttribute(new Job());
-        //passes employer data from employerRepository
+        //passes employer and skill data from repos
         model.addAttribute("employers", employerRepository.findAll());
         model.addAttribute("skills", skillRepository.findAll());
         return "add";
@@ -76,12 +76,11 @@ public class HomeController {
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
         Optional <Job> optionalJob = jobRepository.findById(jobId);
-        if (optionalJob.isPresent()) {
-            model.addAttribute("job", optionalJob.get());
-            return "view";
+        if (optionalJob.isEmpty()){
+            return "redirect:";
         }
-
-        return "redirect:";
+        model.addAttribute("job", optionalJob.get());
+        return "view";
     }
 
 }
