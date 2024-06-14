@@ -46,6 +46,7 @@ public class HomeController {
         model.addAttribute(new Job());
         //passes employer data from employerRepository
         model.addAttribute("employers", employerRepository.findAll());
+        model.addAttribute("skills", skillRepository.findAll());
         return "add";
     }
 
@@ -74,8 +75,13 @@ public class HomeController {
 
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
-
+        Optional <Job> optionalJob = jobRepository.findById(jobId);
+        if (optionalJob.isPresent()) {
+            model.addAttribute("job", optionalJob.get());
             return "view";
+        }
+
+        return "redirect:";
     }
 
 }
